@@ -7,13 +7,13 @@ license = "GNU AGPLv3"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+google-generativeai = "0.5.2"
+openai = "1.23.3"
+anthropic = "0.25.6"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
 
 [build-system]
-requires = ["poetry-core>=1.0.0",
-            "google-generativeai==0.5.2",
-            "openai==1.23.3",
-            "anthropic==0.25.6"]
+requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
