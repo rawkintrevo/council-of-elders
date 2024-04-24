@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "councilofelders"
+version = "0.1.0"
+description = "A Python package for managing multiple LLMs allowing them to chat with each other"
+authors = ["Trevor Grant <trevor.d.grant@gmail.com>"]
+license = "GNU AGPLv3"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+[tool.poetry.dev-dependencies]
+pytest = "^5.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0",
+            "google-generativeai==0.5.2",
+            "openai==1.23.3",
+            "anthropic==0.25.6"]
+build-backend = "poetry.core.masonry.api"
