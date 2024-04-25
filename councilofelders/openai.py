@@ -13,11 +13,8 @@ class OpenAIAgent(Agent):
         self.add_message_to_history(system_prompt, 'system')
 
     def add_message_to_history(self, msg, who):
-        print(f"OpenAIAgent.add_message_to_history called with signature: msg={msg} , who={who}")
         if (who != 'user') or (who != 'system'):
-            print(f"OpenAI changing role '{who}' to 'assistant'")
             who = 'assistant'
-        print(f"OpenAI appending hx {{role: '{who}', content: '{msg}'}}")
         self.history.append({'content': msg, 'role': who})
 
     def generate_next_message(self):

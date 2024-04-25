@@ -13,7 +13,6 @@ class Cohort:
         for h_i in range(len(history)):
 
             for a_i in range(len(self.agents)):
-                print(f"Cohort.load_history history[h_i]['name']: {history[h_i]['name']}")
                 who = ""
                 if history[h_i]['name'] == self.agents[a_i].name:
                     who = "user"
@@ -21,7 +20,6 @@ class Cohort:
                     who = "system"
                 else:
                     who = "assistant"
-                print(f"Cohort.load_history who: {who}")
                 self.agents[a_i].add_message_to_history(history[h_i]['response'], who)
 
     def generate_next_message(self, agent:int = None):
@@ -31,10 +29,8 @@ class Cohort:
             self.current_agent += 1
             if self.current_agent >= len(self.agents):
                 self.current_agent = 0
-        print(f"\n{self.agents[self.current_agent].name} is up!")
         r = self.agents[self.current_agent].generate_next_message()
         self.add_response(r)
-        if self.verbose: print(f"\n{self.agents[self.current_agent].name}: {r}\n")
 
     def add_response(self, response):
         self.history.append({"name": self.agents[self.current_agent].name,

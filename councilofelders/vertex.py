@@ -24,7 +24,6 @@ class GemeniAgent(Agent):
         # who = 'user' | 'model'
         if who != 'user':
             who = 'model'
-        print(f"Gemeni appending hx {{role: '{who}', content: '{msg}'}}")
         self.chat.history.append({'parts': [msg], 'role': who})
         self.history = self.chat.history
 
