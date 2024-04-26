@@ -8,7 +8,7 @@ from llama_index.vector_stores.pinecone import PineconeVectorStore
 from llama_index.embeddings.openai import OpenAIEmbedding
 from llama_index.core.llms import ChatMessage
 
-class LLamaIndexOpenAIAgent(Agent):
+class LlamaIndexOpenAIAgent(Agent):
     def __init__(self,
                  model,
                  system_prompt,

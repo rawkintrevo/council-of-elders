@@ -1,11 +1,11 @@
 
 class Cohort:
-    def __init__(self, agents: list, history: list, verbose: bool):
+    def __init__(self, agents: list, history: list):
         self.agents = agents
         self.history = []
         self.load_history(history)
         self.current_agent = 0
-        self.verbose = verbose
+
 
     def load_history(self, history: list):
         """In firestore, history will be loaded from a document"""

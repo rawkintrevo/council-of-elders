@@ -3,6 +3,9 @@ from councilofelders.utils import merge_items_by_role, update_role
 
 from anthropic import Anthropic
 
+CLAUDE_3_OPUS = "claude-3-opus-20240229"
+CLAUDE_3_SONNET = "claude-3-sonnet-20240229"
+CLAUDE_3_HAIKU = "claude-3-haiku-20240307"
 
 class AnthropicAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):

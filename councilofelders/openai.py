@@ -3,6 +3,10 @@ from openai import OpenAI
 from councilofelders.agent import Agent
 from councilofelders.utils import merge_items_by_role, update_role
 
+GPT4_TURBO = "gpt-4-turbo"
+GPT4 = "gpt-4"
+GPT4_32K = "gpt-4-32k"
+GPT_3_5_TURBO = "gpt-3.5-turbo"
 
 class OpenAIAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):
