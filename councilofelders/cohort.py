@@ -40,3 +40,9 @@ class Cohort:
                 self.agents[i].add_message_to_history(response, 'assistant')
             else:
                 self.agents[i].add_message_to_history(response, 'user')
+
+    def add_user_response(self, response):
+        self.history.append({"name": "user",
+                             "response": response})
+        for i in range(len(self.agents)):
+            self.agents[i].add_message_to_history(response, 'user')
