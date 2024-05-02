@@ -13,13 +13,14 @@ class ReplicateLlamaAgent(Agent):
         if model not in supported_models:
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
 
-        if model == "meta/meta-llama-3-70b-instruct":
-            raise Warning("llama-3-70b-instruct seems to have a glitch where "
-                          "the system prompt is not being used. FYI")
+        # if model == "meta/meta-llama-3-70b-instruct":
+        #     raise Warning("llama-3-70b-instruct seems to have a glitch where "
+        #                   "the system prompt is not being used. FYI")
         super().__init__(replicate.Client(api_key),
                          model,
                          temperature,
                          name)
+        self.system_prompt = system_prompt
 
     def add_message_to_history(self, msg, who):
         if (who != 'user') or (who != 'system'):

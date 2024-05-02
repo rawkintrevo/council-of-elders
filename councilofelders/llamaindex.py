@@ -47,12 +47,13 @@ class LlamaIndexOpenAIAgent(Agent):
     def generate_next_message(self):
         query = self.history[-1]['content']
         response = self.client.chat(query,
-                                    chat_history = self.format_message_list_for_llama_index(
+                                    chat_history=
+                                    self.format_message_list_for_llama_index(
                                         merge_items_by_role(
                                             update_role(self.history, self.name)
                                         )
                                     )
-                                    )
+                    )
         return response.response
 
     def format_message_list_for_llama_index(self, messages):
