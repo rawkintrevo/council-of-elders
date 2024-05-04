@@ -47,5 +47,6 @@ class ReplicateLlamaAgent(Agent):
                                    "system_prompt": self.system_prompt,
                                    "prompt": hx_str
                                })
+        resp = "".join([x['content'] for x in resp])
         return resp
 
