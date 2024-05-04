@@ -32,13 +32,25 @@ class ReplicateLlamaAgent(Agent):
 
     def _format_list_of_dicts(self, data):
         output = ""
-        # todo this is only for llama2, llama3 has different format
-        # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3/
-        for item in data:
-            if item['role'] == 'user':
-                output += "[INST]" + item['content'] + "[/INST]\n"
-            else:
-                output += item['content'] + '\n'
+        if "llama-2" in self.model:
+            for item in data:
+                if item['role'] == 'user':
+                    output += "[INST]" + item['content'] + "[/INST]\n"
+                else:
+                    output += item['content'] + '\n'
+        elif "llama-3" in self.model:
+            # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3/
+            output = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" + self.system_prompt + "<|eot_id|>"
+            for item in data:
+                if item['role'] == 'user':
+                    output += "<|start_header_id>user<|end_header_id|>\n\n" + item['content']
+                else:
+                    output += "<|start_header_id>assistant<|end_header_id|>\n\n" + item['content']
+                output += "<|start_header_id>assistant<|end_header_id|>\n\n"
+        # Code-llama and code-llama-70b have different tags too
+        # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama-70b
+        # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama
+
         return output
 
     def generate_next_message(self):
