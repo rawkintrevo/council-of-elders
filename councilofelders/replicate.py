@@ -1,6 +1,9 @@
 from councilofelders.agent import Agent
 
 import replicate
+from councilofelders.utils import merge_items_by_role, update_role
+
+
 class ReplicateLlamaAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):
         supported_models = [
@@ -27,12 +30,22 @@ class ReplicateLlamaAgent(Agent):
             who = 'assistant'
         self.history.append({'content': msg, 'role': who})
 
+    def _format_list_of_dicts(self, data):
+        output = ""
+        for item in data:
+            if item['role'] == 'user':
+                output += "[INST]" + item['content'] + "[/INST]\n"
+            else:
+                output += item['content'] + '\n'
+        return output
+
     def generate_next_message(self):
+        hx_str = self._format_list_of_dicts(merge_items_by_role( update_role( self.history, self.name )))
         resp = self.client.run(self.model,
                                input = {
                                    "temperature": self.temperature,
                                    "system_prompt": self.system_prompt,
-                                   "prompt": self.history
+                                   "prompt": hx_str
                                })
         return resp
 
