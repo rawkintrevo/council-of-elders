@@ -32,6 +32,8 @@ class ReplicateLlamaAgent(Agent):
 
     def _format_list_of_dicts(self, data):
         output = ""
+        # todo this is only for llama2, llama3 has different format
+        # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3/
         for item in data:
             if item['role'] == 'user':
                 output += "[INST]" + item['content'] + "[/INST]\n"
@@ -47,6 +49,6 @@ class ReplicateLlamaAgent(Agent):
                                    "system_prompt": self.system_prompt,
                                    "prompt": hx_str
                                })
-        resp = "".join([x['content'] for x in resp])
+        resp = "".join(resp) # list of tokens to string
         return resp
 
