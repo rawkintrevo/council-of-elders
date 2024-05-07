@@ -55,12 +55,17 @@ class ReplicateLlamaAgent(Agent):
 
     def generate_next_message(self):
         hx_str = self._format_list_of_dicts(merge_items_by_role( update_role( self.history, self.name )))
+        input_d =  {
+            "temperature": self.temperature,
+            "system_prompt": self.system_prompt,
+            "prompt": hx_str
+        }
+        if "llama-3" in self.model:
+            input_d["max_new_tokens"] = 2048
+        elif "llama-2" in self.model:
+            input_d["max_new_tokens"] = 1024
         resp = self.client.run(self.model,
-                               input = {
-                                   "temperature": self.temperature,
-                                   "system_prompt": self.system_prompt,
-                                   "prompt": hx_str
-                               })
+                               input = input_d)
         resp = "".join(resp) # list of tokens to string
         return resp
 
