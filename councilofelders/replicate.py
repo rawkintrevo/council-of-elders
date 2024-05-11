@@ -17,9 +17,8 @@ class ReplicateLlamaAgent(Agent):
         if model not in supported_models:
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
 
-        # if model == "meta/meta-llama-3-70b-instruct":
-        #     raise Warning("llama-3-70b-instruct seems to have a glitch where "
-        #                   "the system prompt is not being used. FYI")
+        if model == "codellama-70b-instruct":
+            self.model = "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf"
         super().__init__(replicate.Client(api_key),
                          model,
                          temperature,
