@@ -74,7 +74,7 @@ class ReplicateLlamaAgent(Agent):
         elif "llama-2" in self.model:
             input_d["max_new_tokens"] = 1024
         elif "codellama-70b" in self.model:
-            input_d["max_new_tokens"] = 4096
+            input_d["max_tokens"] = 2048
         resp = self.client.run(self.model,
                                input = input_d)
         resp = "".join(resp) # list of tokens to string
