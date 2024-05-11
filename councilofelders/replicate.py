@@ -12,6 +12,7 @@ class ReplicateLlamaAgent(Agent):
             "meta/llama-2-70b-chat",
             "meta/meta-llama-3-8b-instruct",
             "meta/meta-llama-3-70b-instruct",
+            "meta-code-llama-70b"
         ]
         if model not in supported_models:
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
@@ -47,8 +48,17 @@ class ReplicateLlamaAgent(Agent):
                 else:
                     output += "<|start_header_id>assistant<|end_header_id|>\n\n" + item['content']
                 output += "<|start_header_id>assistant<|end_header_id|>\n\n"
+        elif "meta-code-llama-70b" in self.model:
+            # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama-70b
+            output = "<s>Source: system\n\n" + self.system_prompt
+            for item in data:
+                if item['role'] == 'user':
+                    output += "<step> Source: user\n\n" + item['content']
+                else:
+                    output += "<step> Source: assistant\n" + item['content']
+                output += "<step> Source: assistant\nDestination: user"
         # Code-llama and code-llama-70b have different tags too
-        # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama-70b
+
         # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama
 
         return output
