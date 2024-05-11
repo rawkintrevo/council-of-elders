@@ -19,7 +19,7 @@ class ReplicateLlamaAgent(Agent):
 
         if model == "codellama-70b-instruct":
             self.model = "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf"
-        super().__init__(replicate.Client(api_key),
+        super().__init__(replicate.Client(api_token= api_key),
                          model,
                          temperature,
                          name)
