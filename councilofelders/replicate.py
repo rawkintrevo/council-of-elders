@@ -12,7 +12,7 @@ class ReplicateLlamaAgent(Agent):
             "meta/llama-2-70b-chat",
             "meta/meta-llama-3-8b-instruct",
             "meta/meta-llama-3-70b-instruct",
-            "meta-code-llama-70b"
+            "meta/codellama-70b-instruct"
         ]
         if model not in supported_models:
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
@@ -48,7 +48,7 @@ class ReplicateLlamaAgent(Agent):
                 else:
                     output += "<|start_header_id>assistant<|end_header_id|>\n\n" + item['content']
                 output += "<|start_header_id>assistant<|end_header_id|>\n\n"
-        elif "meta-code-llama-70b" in self.model:
+        elif "codellama-70b" in self.model:
             # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama-70b
             output = "<s>Source: system\n\n" + self.system_prompt
             for item in data:
@@ -74,6 +74,8 @@ class ReplicateLlamaAgent(Agent):
             input_d["max_new_tokens"] = 2048
         elif "llama-2" in self.model:
             input_d["max_new_tokens"] = 1024
+        elif "codellama-70b" in self.model:
+            input_d["max_new_tokens"] = 4096
         resp = self.client.run(self.model,
                                input = input_d)
         resp = "".join(resp) # list of tokens to string
