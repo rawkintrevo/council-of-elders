@@ -18,11 +18,15 @@ class ReplicateLlamaAgent(Agent):
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
 
         if model == "codellama-70b-instruct":
-            model = "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf"
-        super().__init__(replicate.Client(api_token= api_key),
-                         model,
-                         temperature,
-                         name)
+            super().__init__(replicate.Client(api_token= api_key),
+                             "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf",
+                             temperature,
+                             name)
+        else:
+            super().__init__(replicate.Client(api_token= api_key),
+                             model,
+                             temperature,
+                             name)
         self.system_prompt = system_prompt
 
     def add_message_to_history(self, msg, who):
