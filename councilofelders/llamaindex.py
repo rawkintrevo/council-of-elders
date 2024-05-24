@@ -54,9 +54,10 @@ class LlamaIndexOpenAIAgent(Agent):
                                         )
                                     )
                     )
-        self.sources = [{'url': source_node.node.metadata.get('src', ''),
-                    'title': source_node.node.metadata.get('title', '')} for
-                   source_node in response.source_nodes]
+        # self.sources = [{'url': source_node.node.metadata.get('src', ''),
+        #             'title': source_node.node.metadata.get('title', '')} for
+        #            source_node in response.source_nodes]
+        self.sources = [sn.metadata for sn in response.source_nodes]
         return response.response
 
     def format_message_list_for_llama_index(self, messages):
