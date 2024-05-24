@@ -17,12 +17,16 @@ class ReplicateLlamaAgent(Agent):
         if model not in supported_models:
             raise Warning(f"Model {model} is not supported. Supported models are {supported_models}")
 
-        if model == "codellama-70b-instruct":
-            self.model = "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf"
-        super().__init__(replicate.Client(api_key),
-                         model,
-                         temperature,
-                         name)
+        if model == "meta/codellama-70b-instruct":
+            super().__init__(replicate.Client(api_token= api_key),
+                             "meta/codellama-70b-instruct:a279116fe47a0f65701a8817188601e2fe8f4b9e04a518789655ea7b995851bf",
+                             temperature,
+                             name)
+        else:
+            super().__init__(replicate.Client(api_token= api_key),
+                             model,
+                             temperature,
+                             name)
         self.system_prompt = system_prompt
 
     def add_message_to_history(self, msg, who):
@@ -75,6 +79,7 @@ class ReplicateLlamaAgent(Agent):
             input_d["max_new_tokens"] = 1024
         elif "codellama-70b" in self.model:
             input_d["max_tokens"] = 2048
+            del input_d['system_prompt']
         resp = self.client.run(self.model,
                                input = input_d)
         resp = "".join(resp) # list of tokens to string
