@@ -33,6 +33,7 @@ class LlamaIndexOpenAIAgent(Agent):
             chat_mode="context",
             llm=llm,
             similarity_top_k=top_k,
+            system_prompt= system_prompt,
         ),
             model,
             temperature,
