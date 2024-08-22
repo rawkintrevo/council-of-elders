@@ -3,40 +3,67 @@ from councilofelders.agent import Agent
 import replicate
 from councilofelders.utils import merge_items_by_role, update_role
 
-class ReplicateGraniteAgent(Agent):  
-    def __init__(self, model, system_prompt, temperature, name, api_key):  
-        supported_model = "ibm-granite/granite-20b-code-instruct-r1.1:409a0c68b74df416c7ae2a3f1552101123356f5a2c6e46d681629b62904c605b"  
+class ReplicateGraniteAgent(Agent):
+    def __init__(self, model, system_prompt, temperature, name, api_key):
+        supported_model = "ibm-granite/granite-20b-code-instruct-r1.1:409a0c68b74df416c7ae2a3f1552101123356f5a2c6e46d681629b62904c605b"
         self.replicate = replicate.Client(api_token=api_key)
         self.api_key = api_key
-        if model != supported_model:  
-            raise Warning(f"Model {model} is not supported. Supported model is {supported_model}")  
-  
-        super().__init__(self.replicate,  
-                         model,  
+        if model != supported_model:
+            raise Warning(f"Model {model} is not supported. Supported model is {supported_model}")
+
+        super().__init__(self.replicate,
+                         model,
                          temperature,
-                         name)  
-        self.system_prompt = system_prompt  
-  
-    def add_message_to_history(self, msg, who):  
-        if who != 'user':  
-            who = 'assistant'  
-        self.history.append({'content': msg, 'role': who})  
-  
-    def generate_next_message(self):  
-        hx_str = merge_items_by_role(update_role(self.history, self.name))  
-        local_replicate = replicate.Client(api_token=self.api_key)  
-        output = local_replicate.run(  
-            self.model,  
-            input={  
-                "prompt": hx_str,  
-                "max_tokens": 2048,  
-                "min_tokens": 0,  
-                "temperature": self.temperature,  
-                "system_prompt": self.system_prompt,  
-            }  
-        )  
-        return output  
-        
+                         name)
+        self.system_prompt = system_prompt
+
+    def add_message_to_history(self, msg, who):
+        if who != 'user':
+            who = 'assistant'
+        self.history.append({'content': msg, 'role': who})
+
+    def _format_list_of_dicts(self, data):
+        output = ""
+        # if "llama-2" in self.model:
+        #     for item in data:
+        #         if item['role'] == 'user':
+        #             output += "[INST]" + item['content'] + "[/INST]\n"
+        #         else:
+        #             output += item['content'] + '\n'
+        # elif "llama-3" in self.model:
+        #     # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-llama-3/
+        #     output = "<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n" + self.system_prompt + "<|eot_id|>"
+        #     for item in data:
+        #         if item['role'] == 'user':
+        #             output += "<|start_header_id>user<|end_header_id|>\n\n" + item['content']
+        #         else:
+        #             output += "<|start_header_id>assistant<|end_header_id|>\n\n" + item['content']
+        #         output += "<|start_header_id>assistant<|end_header_id|>\n\n"
+        # elif "codellama-70b" in self.model:
+            # https://llama.meta.com/docs/model-cards-and-prompt-formats/meta-code-llama-70b
+        output = "<s>Source: system\n\n" + self.system_prompt
+        for item in data:
+            if item['role'] == 'user':
+                output += "<step> Source: user\n\n" + item['content']
+            else:
+                output += "<step> Source: assistant\n" + item['content']
+            output += "<step> Source: assistant\nDestination: user"
+
+    def generate_next_message(self):
+        hx_str = self._format_list_of_dicts(merge_items_by_role(update_role(self.history, self.name)))
+        local_replicate = replicate.Client(api_token=self.api_key)
+        output = local_replicate.run(
+            self.model,
+            input={
+                "prompt": hx_str,
+                "max_tokens": 2048,
+                "min_tokens": 0,
+                "temperature": self.temperature,
+                "system_prompt": self.system_prompt,
+            }
+        )
+        return output
+
 class ReplicateLlamaAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):
         supported_models = [
