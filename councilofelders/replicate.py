@@ -48,6 +48,7 @@ class ReplicateGraniteAgent(Agent):
             else:
                 output += "<step> Source: assistant\n" + item['content']
             output += "<step> Source: assistant\nDestination: user"
+        return output
 
     def generate_next_message(self):
         hx_str = self._format_list_of_dicts(merge_items_by_role(update_role(self.history, self.name)))
