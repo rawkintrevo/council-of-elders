@@ -63,7 +63,9 @@ class ReplicateGraniteAgent(Agent):
                 "system_prompt": self.system_prompt,
             }
         )
-        return output
+
+        output_s = "".join(item for item in output)
+        return output_s
 
 class ReplicateLlamaAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):
