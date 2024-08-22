@@ -3,7 +3,39 @@ from councilofelders.agent import Agent
 import replicate
 from councilofelders.utils import merge_items_by_role, update_role
 
-
+class ReplicateGraniteAgent(Agent):  
+    def __init__(self, model, system_prompt, temperature, name, api_key):  
+        supported_model = "ibm-granite/granite-20b-code-instruct-r1.1:409a0c68b74df416c7ae2a3f1552101123356f5a2c6e46d681629b62904c605b"  
+          
+        if model != supported_model:  
+            raise Warning(f"Model {model} is not supported. Supported model is {supported_model}")  
+  
+        super().__init__(replicate.Client(api_token=api_key),  
+                         model,  
+                         temperature,
+                         name)  
+        self.system_prompt = system_prompt  
+  
+    def add_message_to_history(self, msg, who):  
+        if who != 'user':  
+            who = 'assistant'  
+        self.history.append({'content': msg, 'role': who})  
+  
+    def generate_next_message(self):  
+        hx_str = merge_items_by_role(update_role(self.history, self.name))  
+  
+        output = replicate.run(  
+            self.model,  
+            input={  
+                "prompt": hx_str,  
+                "max_tokens": 2048,  
+                "min_tokens": 0,  
+                "temperature": self.temperature,  
+                "system_prompt": self.system_prompt,  
+            }  
+        )  
+        return output  
+        
 class ReplicateLlamaAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):
         supported_models = [
