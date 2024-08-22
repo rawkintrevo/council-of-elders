@@ -7,6 +7,7 @@ class ReplicateGraniteAgent(Agent):
     def __init__(self, model, system_prompt, temperature, name, api_key):  
         supported_model = "ibm-granite/granite-20b-code-instruct-r1.1:409a0c68b74df416c7ae2a3f1552101123356f5a2c6e46d681629b62904c605b"  
         self.replicate = replicate.Client(api_token=api_key)
+        self.api_key = api_key
         if model != supported_model:  
             raise Warning(f"Model {model} is not supported. Supported model is {supported_model}")  
   
@@ -23,8 +24,8 @@ class ReplicateGraniteAgent(Agent):
   
     def generate_next_message(self):  
         hx_str = merge_items_by_role(update_role(self.history, self.name))  
-  
-        output = self.replicate.run(  
+        local_replicate = replicate.Client(api_token=self.api_key)  
+        output = local_replicate.run(  
             self.model,  
             input={  
                 "prompt": hx_str,  
