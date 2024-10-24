@@ -9,9 +9,10 @@ GPT4_32K = "gpt-4-32k"
 GPT_3_5_TURBO = "gpt-3.5-turbo"
 
 class OpenAIAgent(Agent):
-    def __init__(self, model, system_prompt, temperature, name, api_key, base_url="https://api.openai.com"):
+    def __init__(self, model, system_prompt, temperature, name, api_key,
+                 base_url="https://api.openai.com/v1"):
 
-        super().__init__(OpenAI(api_key= api_key, base_url=base_url),
+        super().__init__(OpenAI(api_key=api_key, base_url=base_url),
                          model,
                          temperature,
                          name)
